@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Participantes
+{% endblock %}
+
+{% block container %}
+    <div class="row">
+        <!-- formulario -->
+        <div class="col-3">
+            <form action="{% url 'participantes' %}" method="post">
+                {% csrf_token %}
+                <div class="mb-2">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" class="form-control">
+                </div>
+                <div class="mb-2">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" name="apellido" id="apellido" class="form-control">
+                </div>
+                <div class="mb-2">
+                    <label for="correo">Correo</label>
+                    <input type="text" name="correo" id="correo" class="form-control">
+                </div>
+                <div class="mb-2">
+                    <label for="twitter">Twitter</label>
+                    <input type="text" name="twitter" id="twitter" placeholder="Tu usuario" class="form-control">
+                </div>
+                <div class="mb-2">
+                    <input type ="submit" class="btn btn-success" value="Registrar Participante">
+                </div>
+            </form>
+        </div>
+        <!-- datos -->
+        <div class="col-9">
+            {% if messages %}
+                <div class="alert alert-success mb-3">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form action="" method="get">
+                <input name="q" valur="{{ q }}" type="search" class="form-control" placeholder="Buscar participante">
+            </form>
+
+             <h2 class= "mt-3">Lista de Participantes {{ formulario.count }}</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>nombre</th>
+                        <th>apellido</th>
+                        <th>correo</th>
+                        <th>twitter</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in formulario %}
+                        <tr>
+                            <td>{{ p.nombre }}</td>
+                            <td>{{ p.apellido }}</td>
+                            <td>{{ p.correo }}</td>
+                            <td>
+                                {{ p.twitter| default_if_none:'-' }}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-danger text-center">No se encontraron resultados</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>   
+        $(function () {
+                setTimeout(() => {
+                $('.alert').slideUp(function () { 
+                    $(this).remove();
+                });
+            }, 3000)
+        });
+    </script> 
+{% endblock  %}
